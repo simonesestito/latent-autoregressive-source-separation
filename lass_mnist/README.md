@@ -18,4 +18,4 @@ To separate MNIST test, you can run the script
 ```bash
 PYTHONPATH=. python lass/separate.py 
 ``` 
-This will separate the test set of mnist into the folder `separated_mnist`.
+This will separate the test set of mnist into the folder `separated-images`.
