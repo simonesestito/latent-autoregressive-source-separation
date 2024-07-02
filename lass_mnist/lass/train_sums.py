@@ -87,7 +87,7 @@ class SumsEstimationConfig:
 CONFIG_STORE.store(group="sums_estimation", name="base_sums_estimation", node=SumsEstimationConfig)
 
 
-@hydra.main(version_base=None, config_path=CONFIG_DIR)
+@hydra.main(version_base=None, config_path=CONFIG_DIR, config_name="sums_estimation/mnist.yaml")
 def main(cfg):
     cfg: SumsEstimationConfig = cfg.sums_estimation
     now = datetime.now()
