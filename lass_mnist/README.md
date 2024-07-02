@@ -16,6 +16,6 @@ Place the downloaded file inside of the directory `lass_mnist/checkpoints` and e
 ## Separate images
 To separate MNIST test, you can run the script
 ```bash
-PYTONPATH=. python lass/separate.py 
+PYTHONPATH=. python lass/separate.py 
 ``` 
 This will separate the test set of mnist into the folder `separated_mnist`.

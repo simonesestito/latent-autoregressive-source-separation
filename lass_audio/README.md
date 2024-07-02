@@ -26,5 +26,5 @@ Similarly to before, place the downloaded file inside of the directory `lass_aud
 ## Separate images
 To separate you can run the script
 ```bash
-PYTONPATH=. python lass/separate.py
+PYTHONPATH=. python lass/separate.py
 ``` 
