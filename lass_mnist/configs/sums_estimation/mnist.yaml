@@ -6,3 +6,4 @@ defaults:
 
 output_folder: "sums-MNIST"
 num_codes: 256
+vqvae_checkpoint: "checkpoints/vqvae/256-sigmoid-big.pt"

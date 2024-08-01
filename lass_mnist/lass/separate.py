@@ -184,11 +184,58 @@ CONFIG_STORE.store(
 @hydra.main(version_base=None, config_path=CONFIG_DIR, config_name="separation/mnist.yaml")
 def main(cfg):
     cfg: EvaluateSeparationConfig = cfg.separation
+    print(cfg)
 
     # instantiate models
     model = hydra.utils.instantiate(cfg.vqvae).to(cfg.device)
+    print(model)
+    print('Input dim:', model.input_dim)
+    print('Dim:', model.dim)
+    print('K:', model.K)
+    print('Trainable parameters:', sum(p.numel() for p in model.parameters() if p.requires_grad))
+    print('Frozen parameters:', sum(p.numel() for p in model.parameters() if not p.requires_grad))
+    print('Parameters type:', model.parameters().__next__().dtype)
+    print()
+
+    print('VQ-VAE encoder only:', model.encoder)
+    print('Trainable parameters:', sum(p.numel() for p in model.encoder.parameters() if p.requires_grad))
+    print('Frozen parameters:', sum(p.numel() for p in model.encoder.parameters() if not p.requires_grad))
+    print('Parameters type:', model.encoder.parameters().__next__().dtype)
+    print()
+
+    print('VQ-VAE decoder only:', model.decoder)
+    print('Trainable parameters:', sum(p.numel() for p in model.decoder.parameters() if p.requires_grad))
+    print('Frozen parameters:', sum(p.numel() for p in model.decoder.parameters() if not p.requires_grad))
+    print('Parameters type:', model.decoder.parameters().__next__().dtype)
+    print()
+
+    print('VQ-VAE codebook only:', model.codeBook)
+    print('Trainable parameters:', sum(p.numel() for p in model.codeBook.parameters() if p.requires_grad))
+    print('Frozen parameters:', sum(p.numel() for p in model.codeBook.parameters() if not p.requires_grad))
+    print('Parameters type:', model.codeBook.parameters().__next__().dtype)
+    print()
+
     transformer = hydra.utils.instantiate(cfg.autoregressive).to(cfg.device)
+    print(transformer)
+    print('Trainable parameters:', sum(p.numel() for p in transformer.parameters() if p.requires_grad))
+    print('Frozen parameters:', sum(p.numel() for p in transformer.parameters() if not p.requires_grad))
+    print('Parameters type:', transformer.parameters().__next__().dtype)
+    print()
+
     assert isinstance(transformer, PreTrainedModel)
+
+    # Print VQVAE output size
+    print('VQVAE output size:', model.encode(torch.randn(1, 1, 28, 28)).size()) # VQVAE output size
+
+    # Print P size
+    with open(cfg.checkpoints.sums, 'rb') as f:
+        P = torch.load(f, map_location=cfg.device)
+        print('P size:', P.size())
+        print('P type:', P.dtype)
+        print()
+
+    print('Separation method:', cfg.separation_method)
+    print()
 
     # create output directory
     result_dir = ROOT_DIR/ "separated-images"

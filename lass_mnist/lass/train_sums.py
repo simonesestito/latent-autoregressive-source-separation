@@ -21,18 +21,31 @@ def train(data_loader, sums, model, args, writer, step):
         images1 = images[: args.batch_size // 2]
         images2 = images[args.batch_size // 2 :]
         images_mixture = 0.5 * images1 + 0.5 * images2
+        print('Images mixture:', images_mixture.size())
 
         with torch.no_grad():
             _, z_e_x1, _ = model(images1)
+            print('Z_e_x1:', z_e_x1.size())
             _, z_e_x2, _ = model(images2)
+            print('Z_e_x2:', z_e_x2.size())
             _, z_e_x_mixture, _ = model(images_mixture)
+            print('Z_e_x_mixture:', z_e_x_mixture.size())
             codes1 = model.codeBook(z_e_x1)
+            print('Codes1:', codes1.size())
             codes2 = model.codeBook(z_e_x2)
+            print('Codes2:', codes2.size())
             codes_mixture = model.codeBook(z_e_x_mixture)
+            print('Codes mixture:', codes_mixture.size())
 
         codes1 = codes1.flatten()
         codes2 = codes2.flatten()
         codes_mixture = codes_mixture.flatten()
+
+        print('Codes1:', codes1.size())
+        print('Codes2:', codes2.size())
+        print('Codes mixture:', codes_mixture.size())
+        print('Sums:', sums.size())
+        print()
 
         sums[codes1, codes2, codes_mixture] += 1
         step += 1
@@ -122,7 +135,7 @@ def main(cfg):
     # Fixed images for TensorBoard
     fixed_images, _ = next(iter(test_loader))
     fixed_grid = make_grid(fixed_images, nrow=8, range=(-1, 1), normalize=True)
-    writer.add_image("original", fixed_grid, 0)
+    # writer.add_image("original", fixed_grid, 0)
 
     # load vqvae
     model = hydra.utils.instantiate(cfg.vqvae).to(cfg.device)
@@ -134,6 +147,7 @@ def main(cfg):
         param.requires_grad = False
 
     sums = torch.zeros(cfg.num_codes, cfg.num_codes, cfg.num_codes).to(cfg.device)
+    print(sums.dtype, sums.size())
 
     step = 0
     best_loss = -1.0

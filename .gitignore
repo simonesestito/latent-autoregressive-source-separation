@@ -140,3 +140,4 @@ dmypy.json
 */outputs/*
 */logs/*
 /lass_mnist/separated-images
+/lass_mnist/separated-images.bak
