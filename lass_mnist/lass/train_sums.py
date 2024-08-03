@@ -21,31 +21,31 @@ def train(data_loader, sums, model, args, writer, step):
         images1 = images[: args.batch_size // 2]
         images2 = images[args.batch_size // 2 :]
         images_mixture = 0.5 * images1 + 0.5 * images2
-        print('Images mixture:', images_mixture.size())
+        # print('Images mixture:', images_mixture.size())
 
         with torch.no_grad():
             _, z_e_x1, _ = model(images1)
-            print('Z_e_x1:', z_e_x1.size())
+            # print('Z_e_x1:', z_e_x1.size())
             _, z_e_x2, _ = model(images2)
-            print('Z_e_x2:', z_e_x2.size())
+            # print('Z_e_x2:', z_e_x2.size())
             _, z_e_x_mixture, _ = model(images_mixture)
-            print('Z_e_x_mixture:', z_e_x_mixture.size())
+            # print('Z_e_x_mixture:', z_e_x_mixture.size())
             codes1 = model.codeBook(z_e_x1)
-            print('Codes1:', codes1.size())
+            # print('Codes1:', codes1.size())
             codes2 = model.codeBook(z_e_x2)
-            print('Codes2:', codes2.size())
+            # print('Codes2:', codes2.size())
             codes_mixture = model.codeBook(z_e_x_mixture)
-            print('Codes mixture:', codes_mixture.size())
+            # print('Codes mixture:', codes_mixture.size())
 
         codes1 = codes1.flatten()
         codes2 = codes2.flatten()
         codes_mixture = codes_mixture.flatten()
 
-        print('Codes1:', codes1.size())
-        print('Codes2:', codes2.size())
-        print('Codes mixture:', codes_mixture.size())
-        print('Sums:', sums.size())
-        print()
+        # print('Codes1:', codes1.size())
+        # print('Codes2:', codes2.size())
+        # print('Codes mixture:', codes_mixture.size())
+        # print('Sums:', sums.size())
+        # print()
 
         sums[codes1, codes2, codes_mixture] += 1
         step += 1
