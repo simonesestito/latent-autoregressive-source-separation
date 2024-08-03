@@ -1,4 +1,4 @@
-_target_: modules.VectorQuantizedVAE
+_target_: modules.DistilVectorQuantizedVAE
 input_dim: 1
 dim: 128
 K: 256

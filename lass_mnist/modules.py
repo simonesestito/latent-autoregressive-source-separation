@@ -132,3 +132,70 @@ class VectorQuantizedVAE(nn.Module):
 
 
 
+class DistilResBlock(nn.Module):
+    def __init__(self, dim):
+        super().__init__()
+        self.block = nn.Sequential(
+            nn.LeakyReLU(),
+            nn.Conv2d(dim, dim, 3, 1, 1),  # Since it is a resblock, dimensionality of the output of self.block MUST be the same as the input X
+            nn.BatchNorm2d(dim),
+            # nn.LeakyReLU(),
+            # nn.Conv2d(dim, dim, 1),
+            # nn.BatchNorm2d(dim)
+        )
+
+    def forward(self, x):
+        return x + self.block(x)
+    
+
+class DistilVectorQuantizedVAE(nn.Module):
+    def __init__(self, input_dim, _dim, K=512):
+        super().__init__()
+
+        kernel_size, stride, padding = 6, 4, 1  # Match the output size 28x28
+
+        self.encoder = nn.Sequential(
+            nn.Conv2d(input_dim, _dim, kernel_size, stride, padding),
+            nn.BatchNorm2d(_dim),
+            nn.LeakyReLU(),
+
+            # Use only 1 ResBlock instead of 2
+            DistilResBlock(_dim),
+        )
+
+        # Still, keep K the same (determining the output shape)
+        self.codeBook = VQEmbedding(K, _dim)
+
+        self.decoder = nn.Sequential(
+            # Use only 1 ResBlock instead of 2
+            DistilResBlock(_dim),
+            nn.LeakyReLU(),
+
+            nn.ConvTranspose2d(_dim, input_dim, kernel_size, stride, padding),
+            nn.Sigmoid()
+        )
+
+        self.apply(weights_init)
+
+    def encode(self, x):
+        z_e_x = self.encoder(x)
+        codes = self.codeBook(z_e_x)
+        return codes
+
+    def decode(self, codes):
+        z_q_x = self.codeBook.embedding(codes).permute(0, 3, 1, 2)  # (B, C, H, W)
+        x_tilde = self.decoder(z_q_x)
+        return x_tilde
+
+    def codes_to_latents(self,codes):
+        return self.codeBook.embedding(codes).permute(0, 3, 1, 2)  # (B, C, H, W)
+
+    def decode_latents(self, z_q_x):
+        x_tilde = self.decoder(z_q_x)
+        return x_tilde
+
+    def forward(self, x):
+        z_e_x = self.encoder(x)
+        z_q_x_st, z_q_x = self.codeBook.straight_through(z_e_x)
+        x_tilde = self.decoder(z_q_x_st)
+        return x_tilde, z_e_x, z_q_x
