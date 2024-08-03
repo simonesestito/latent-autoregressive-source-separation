@@ -91,7 +91,7 @@ class SumsEstimationConfig:
     vqvae_checkpoint: str = MISSING
     num_codes: int = MISSING
     batch_size: int = 64
-    num_epochs: int = 500
+    num_epochs: int = 100  # Instead of 500
     output_folder: str = "sums"
     num_workers: int = mp.cpu_count() - 1
     device: str = "cuda" if torch.cuda.is_available() else "cpu"
