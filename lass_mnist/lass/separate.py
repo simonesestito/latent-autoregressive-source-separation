@@ -225,7 +225,7 @@ def main(cfg):
     assert isinstance(transformer, PreTrainedModel)
 
     # Print VQVAE output size
-    print('VQVAE output size:', model.encode(torch.randn(1, 1, 28, 28)).size()) # VQVAE output size
+    print('VQVAE output size:', model.encode(torch.randn(1, 1, 28, 28).to(cfg.device)).size()) # VQVAE output size
 
     # Print P size
     with open(cfg.checkpoints.sums, 'rb') as f:
