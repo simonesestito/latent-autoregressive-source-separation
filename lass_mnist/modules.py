@@ -148,30 +148,30 @@ class DistilResBlock(nn.Module):
         return x + self.block(x)
     
 
-class DistilVectorQuantizedVAE(nn.Module):
-    def __init__(self, input_dim, _dim, K=512):
-        super().__init__()
+class DistilVectorQuantizedVAE(VectorQuantizedVAE):  # It can inherit from VectorQuantizedVAE since it has the same interface
+    def __init__(self, input_dim, dim, K=512):
+        super().__init__(input_dim=input_dim, dim=dim, K=K)
 
         kernel_size, stride, padding = 6, 4, 1  # Match the output size 28x28
 
         self.encoder = nn.Sequential(
-            nn.Conv2d(input_dim, _dim, kernel_size, stride, padding),
-            nn.BatchNorm2d(_dim),
+            nn.Conv2d(input_dim, dim, kernel_size, stride, padding),
+            nn.BatchNorm2d(dim),
             nn.LeakyReLU(),
 
             # Use only 1 ResBlock instead of 2
-            DistilResBlock(_dim),
+            DistilResBlock(dim),
         )
 
         # Still, keep K the same (determining the output shape)
-        self.codeBook = VQEmbedding(K, _dim)
+        self.codeBook = VQEmbedding(K, dim)
 
         self.decoder = nn.Sequential(
             # Use only 1 ResBlock instead of 2
-            DistilResBlock(_dim),
+            DistilResBlock(dim),
             nn.LeakyReLU(),
 
-            nn.ConvTranspose2d(_dim, input_dim, kernel_size, stride, padding),
+            nn.ConvTranspose2d(dim, input_dim, kernel_size, stride, padding),
             nn.Sigmoid()
         )
 
