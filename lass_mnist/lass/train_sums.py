@@ -133,8 +133,8 @@ def main(cfg):
     )
 
     # Fixed images for TensorBoard
-    fixed_images, _ = next(iter(test_loader))
-    fixed_grid = make_grid(fixed_images, nrow=8, range=(-1, 1), normalize=True)
+    # fixed_images, _ = next(iter(test_loader))
+    # fixed_grid = make_grid(fixed_images, nrow=8, value_range=(-1, 1), normalize=True)
     # writer.add_image("original", fixed_grid, 0)
 
     # load vqvae
