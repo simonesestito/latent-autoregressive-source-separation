@@ -139,6 +139,7 @@ def main(cfg):
 
     # load vqvae
     model = hydra.utils.instantiate(cfg.vqvae).to(cfg.device)
+    print('>>>>>>> Loading VQ-VAE checkpoint:', cfg.vqvae_checkpoint)
     with open(cfg.vqvae_checkpoint, "rb") as f:
         model.load_state_dict(torch.load(f, map_location=cfg.device))
 
