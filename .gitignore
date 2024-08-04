@@ -139,5 +139,4 @@ dmypy.json
 !.gitkeep
 */outputs/*
 */logs/*
-/lass_mnist/separated-images
-/lass_mnist/separated-images.bak
+/lass_mnist/separated-images*
