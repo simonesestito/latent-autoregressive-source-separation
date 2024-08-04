@@ -6,4 +6,4 @@ defaults:
 
 output_folder: "sums-MNIST"
 num_codes: 256
-vqvae_checkpoint: "checkpoints/vqvae/student_model_trained_full.pt"
+vqvae_checkpoint: "checkpoints/vqvae/alone_student_model.pt"
