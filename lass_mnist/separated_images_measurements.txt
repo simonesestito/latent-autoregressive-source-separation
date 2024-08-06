@@ -1,0 +1,12 @@
+Root directory: separated-images-TEACHER
+Average L2: 0.06728
+Average PSNR: 13.64039
+--------------------------------------------------------------------------------
+Root directory: separated-images-STUDENT-FULL
+Average L2: 0.06702
+Average PSNR: 13.25811
+--------------------------------------------------------------------------------
+Root directory: separated-images-STUDENT-ALONE
+Average L2: 0.05848
+Average PSNR: 12.68318
+--------------------------------------------------------------------------------
